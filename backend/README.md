@@ -1,6 +1,6 @@
 # backend-lab
 
-점심 1시간 × 11주. 미니 이커머스(상품 조회/주문/재고/선착순 쿠폰) 하나를 키워가며
+미니 이커머스(상품 조회/주문/재고/선착순 쿠폰) 하나를 키워가며
 Redis, Kafka, Resilience4j, Kubernetes 등을 **직접 부하를 걸어 터뜨려 보고** 트레이드오프를 기록하는 레포.
 
 - Java 21 / Spring Boot 3.3 / Gradle / MySQL 8.4
