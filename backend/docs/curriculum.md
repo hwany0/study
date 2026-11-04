@@ -14,8 +14,5 @@
 | 9 | K8s 스케일링 | HPA, Throttling, OOMKilled, Graceful Shutdown, (KEDA) |
 | 10 | 종합 | 선착순 쿠폰 1만 TPS 시나리오, 회고 |
 
-## 점심 1시간 템플릿
-- 0~10분 가설 / 10~40분 구현·실험 / 40~55분 측정·캡처 / 55~60분 README 정리·커밋
-
 ## 실험 README 템플릿
 `experiments/_template.md` 참고
