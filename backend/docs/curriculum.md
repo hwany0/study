@@ -11,7 +11,7 @@
 
 ## Week 0 — 기반 환경 및 베이스라인 (2~3일)
 - [ ] Spring Boot 애플리케이션 및 Actuator 실행
-- [ ] Docker Compose로 MySQL, Prometheus, Grafana 구성
+- [ ] Docker Compose로 SQL Server 2022, Prometheus, Grafana 구성
 - [ ] Micrometer 메트릭: JVM, HTTP, HikariCP 확인
 - [ ] k6로 단건/목록 API 부하 테스트
 - [ ] 베이스라인 TPS, p50/p95/p99, 오류율 기록
@@ -21,7 +21,7 @@
 
 ## Week 1 — DB 성능과 커넥션 풀
 - [ ] 인덱스 유무 및 단일/복합 인덱스 비교
-- [ ] EXPLAIN / EXPLAIN ANALYZE 실행 계획 분석
+- [ ] SQL Server Actual Execution Plan 및 SET STATISTICS IO, TIME 분석
 - [ ] N+1 재현 및 fetch 전략 변경 전후 비교
 - [ ] HikariCP 풀 크기별 TPS, Pending, Active, DB 부하 비교
 - [ ] 커넥션 풀 고갈 및 대기 재현

@@ -1,30 +1,43 @@
 name: backend-lab
 
 services:
-  mysql:
-    image: mysql:8.4
-    container_name: lab-mysql
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: lab-mssql
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: lab
-      MYSQL_USER: lab
-      MYSQL_PASSWORD: lab
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:?Set MSSQL_SA_PASSWORD in .env}
     ports:
-      - "3306:3306"
-    command:
-      - --character-set-server=utf8mb4
-      - --max-connections=300
-      - --innodb-buffer-pool-size=512M
-      - --slow_query_log=1
-      - --long_query_time=0.1
+      - "1433:1433"
     cpus: 2
-    mem_limit: 1g
+    mem_limit: 3g
     volumes:
-      - mysql-data:/var/lib/mysql
+      - mssql-data:/var/opt/mssql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
-      interval: 5s
+      test:
+        - CMD-SHELL
+        - /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -Q "SELECT 1" -b -o /dev/null
+      interval: 10s
+      timeout: 5s
       retries: 20
+      start_period: 30s
+
+  mssql-init:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: lab-mssql-init
+    depends_on:
+      mssql:
+        condition: service_healthy
+    environment:
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:?Set MSSQL_SA_PASSWORD in .env}
+    entrypoint: ["/bin/bash", "-c"]
+    command: >
+      /opt/mssql-tools18/bin/sqlcmd
+      -C -S mssql -U sa
+      -P "$$MSSQL_SA_PASSWORD"
+      -Q "IF DB_ID(N'lab') IS NULL CREATE DATABASE lab;"
+    restart: "no"
 
   prometheus:
     image: prom/prometheus:v2.55.1
@@ -51,5 +64,5 @@ services:
       - prometheus
 
 volumes:
-  mysql-data:
+  mssql-data:
   grafana-data:
