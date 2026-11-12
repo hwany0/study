@@ -32,11 +32,21 @@ services:
     environment:
       MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:?Set MSSQL_SA_PASSWORD in .env}
     entrypoint: ["/bin/bash", "-c"]
-    command: >
-      /opt/mssql-tools18/bin/sqlcmd
-      -C -S mssql -U sa
-      -P "$$MSSQL_SA_PASSWORD"
-      -Q "IF DB_ID(N'lab') IS NULL CREATE DATABASE lab;"
+    command:
+      - |
+        for i in {1..30}; do
+          if /opt/mssql-tools18/bin/sqlcmd -C -S tcp:mssql,1433 -U sa -P "$$MSSQL_SA_PASSWORD" -Q "SELECT 1" -b -o /dev/null; then
+            echo "MSSQL is accepting connections"
+            break
+          fi
+          if [ "$$i" -eq 30 ]; then
+            echo "MSSQL connection failed after 30 attempts"
+            exit 1
+          fi
+          echo "Waiting for MSSQL ($$i/30)..."
+          sleep 2
+        done
+        /opt/mssql-tools18/bin/sqlcmd -C -S tcp:mssql,1433 -U sa -P "$$MSSQL_SA_PASSWORD" -Q "IF DB_ID(N'lab') IS NULL CREATE DATABASE lab;" -b
     restart: "no"
 
   prometheus:
