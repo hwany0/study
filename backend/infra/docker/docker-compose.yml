@@ -22,7 +22,6 @@ services:
       timeout: 5s
       retries: 20
       start_period: 30s
-
   mssql-init:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: lab-mssql-init
@@ -48,7 +47,6 @@ services:
         done
         /opt/mssql-tools18/bin/sqlcmd -C -S tcp:mssql,1433 -U sa -P "$$MSSQL_SA_PASSWORD" -Q "IF DB_ID(N'lab') IS NULL CREATE DATABASE lab;" -b
     restart: "no"
-
   prometheus:
     image: prom/prometheus:v2.55.1
     container_name: lab-prometheus
